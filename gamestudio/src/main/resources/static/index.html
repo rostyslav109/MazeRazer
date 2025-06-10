@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Maze Race - Home</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<h1>Maze Race</h1>
+
+<!-- Введення імені та вибір рівня -->
+<form method="get" action="/maze">
+  <label for="name">Enter your name:</label><br/>
+  <input type="text" id="name" name="name" required/><br/><br/>
+
+  <label for="level">Choose a level:</label><br/>
+  <select id="level" name="level">
+    <option value="easy">Easy</option>
+    <option value="medium">Medium</option>
+    <option value="hard">Hard</option>
+  </select><br/><br/>
+
+  <button type="submit">Start Game</button>
+</form>
+
+<!-- Блок коментарів і рейтингів (тільки перегляд) -->
+<div class="comments-section">
+  <h2>Average Rating: <span th:text="${averageRating}">0</span>/5</h2>
+
+  <h2>Comments:</h2>
+  <table class="comments-table">
+    <thead>
+    <tr>
+      <th>Player</th>
+      <th>Comment</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="comment : ${comments}">
+      <td th:text="${comment.player}">Player</td>
+      <td th:text="${comment.comment}">Comment</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Футер -->
+<footer>
+  <h3>Maze Racer Game</h3>
+  <p>Developed by Rostyslav.</p>
+  <div class="social-icons">
+    <a href="#" target="_blank">Facebook</a>
+    <a href="#" target="_blank">Twitter</a>
+    <a href="#" target="_blank">Instagram</a>
+  </div>
+</footer>
+
+</body>
+</html>

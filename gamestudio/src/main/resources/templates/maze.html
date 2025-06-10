@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Maze Race</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    table {
+      border-collapse: collapse;
+      margin: 20px auto;
+    }
+    td {
+      width: 30px;
+      height: 30px;
+      text-align: center;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .game-container {
+      text-align: center;
+    }
+    button {
+      font-size: 16px;
+      padding: 10px 20px;
+      margin: 5px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+<h1>Maze Race</h1>
+
+<!-- Вибір складності (видно лише якщо лабіринт ще не почався) -->
+<div th:if="${mazeLoaded == false}">
+  <!-- Якщо ім’я ще не введене -->
+  <div class="player-name-section" th:if="${playerName == null}">
+    <h3>Enter Your Name:</h3>
+    <form method="get" action="/maze">
+      <input type="text" name="playerName" placeholder="Your name" required />
+<!--      <button type="submit" style="background-color: blue; color: white;">Start Game</button>-->
+      <button type="submit">Start Game</button>
+    </form>
+  </div>
+
+  <!-- Якщо ім’я введене — показати вибір складності -->
+  <div th:if="${playerName != null}">
+    <h2>Welcome, <span th:text="${playerName}"></span>!</h2>
+    <form action="/maze" method="get">
+      <button name="command" value="easy">Easy</button>
+      <button name="command" value="medium">Medium</button>
+      <button name="command" value="hard">Hard</button>
+    </form>
+    <!-- Кнопка для зміни імені -->
+    <form method="get" action="/maze">
+      <button name="command" value="changeName" >Change Name</button>
+    </form>
+  </div>
+</div>
+
+<!-- Основна гра (показується лише якщо лабіринт завантажено) -->
+<div th:if="${mazeLoaded == true}">
+  <!-- Ігрове поле -->
+<!--  <p>time: <span th:text="${timeElapsed}">0</span> seconds</p>-->
+  <div th:utext="${htmlField}"></div>
+
+  <p>Steps: <b th:text="${steps}">0</b></p>
+
+<!--  <div style="margin-top: 20px;">-->
+<!--    <form action="/maze" method="get">-->
+<!--      <button name="command" value="restart" style="background-color: #3f51b5;">Restart 🔄</button>-->
+<!--    </form>-->
+<!--  </div>-->
+  <!-- Повідомлення про перемогу -->
+  <div th:if="${gameFinished}" class="victory-message">
+    <h2 style="color:#2e8b57; text-shadow: 1px 1px 3px rgba(0,0,0,0.2);">
+      🎉 VICTORY! 🎉
+    </h2>
+
+    <div class="victory-details" style="background-color: #f0fff0; border-radius: 10px; padding: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); max-width: 500px; margin: 0 auto;">
+      <p style="font-size: 18px;">Congratulations! You've conquered the maze!</p>
+      <p>Your quick thinking and navigation skills have led you to victory.</p>
+      <p style="font-weight: bold;">Final Score: <span style="font-size: 24px; color: #ff8c00;" th:text="${score}">0</span> points</p>
+
+      <!-- Comment prompt -->
+      <div class="comment-prompt" style="margin-top: 20px; padding: 10px; background-color: #e8f5e9; border-left: 4px solid #4CAF50; border-radius: 4px;">
+        <p>How was your maze experience? Share your thoughts!</p>
+        <form method="post" action="/maze" style="margin-top: 10px;">
+          <input type="text" name="comment" placeholder="Your comment" required style="width: 100%; padding: 8px;" />
+          <button type="submit" style="margin-top: 10px;">Share Your Victory Story</button>
+        </form>
+      </div>
+
+      <!-- New game button -->
+      <div style="margin-top: 20px;">
+        <form action="/maze" method="get">
+          <button name="command" value="new" style="background-color: #3f51b5;">Play Again 🔄</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Game Over Message -->
+  <div th:if="${gameOver}" class="game-over">
+    <h2 style="color:#e53935;">⏰ Time's up! The maze wins this round.</h2>
+    <p>Better luck next time! Why not try again?</p>
+    <form action="/maze" method="get">
+      <button name="command" value="new">Try Again 🔄</button>
+    </form>
+  </div>
+
+  <!-- Управління через клавіатуру -->
+  <script>
+
+    document.addEventListener("keydown", function(event) {
+      const activeTag = document.activeElement.tagName.toLowerCase();
+      if (activeTag === 'input' || activeTag === 'textarea') {
+        return;
+      }
+
+      switch (event.key.toLowerCase()) {
+        case "w":
+          window.location.href = "/maze?command=up";
+          break;
+        case "s":
+          window.location.href = "/maze?command=down";
+          break;
+        case "a":
+          window.location.href = "/maze?command=left";
+          break;
+        case "d":
+          window.location.href = "/maze?command=right";
+          break;
+      }
+    });
+  </script>
+
+  <!-- Нова гра -->
+  <form action="/maze" method="get">
+    <button name="command" value="new" >Back </button>
+  </form>
+</div>
+
+<!-- 💬 Блок коментарів і рейтингу -->
+<div class="comments-section">
+  </form>
+
+  <h2>Average Rating: <span th:text="${averageRating}">0</span>/5</h2>
+
+  <form method="post" action="/maze">
+    <label>Rate the game:</label><br/>
+    <select name="rating">
+      <option value="1">★☆☆☆☆</option>
+      <option value="2">★★☆☆☆</option>
+      <option value="3">★★★☆☆</option>
+      <option value="4">★★★★☆</option>
+      <option value="5">★★★★★</option>
+    </select>
+    <button type="submit">Submit Rating</button>
+  </form>
+
+  <h3>Your Rating: <span th:text="${playerRating}">-</span></h3>
+
+<h2>Top 10 Players</h2>
+<table class="top-score-table">
+  <thead>
+  <tr>
+    <th>Player</th>
+    <th>Points</th>
+    <th>Date</th>
+    <th>Comment (optional)</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="entry : ${scoreWithComments}">
+    <td th:text="${entry.player}">Player</td>
+    <td th:text="${entry.points}">0</td>
+    <td th:text="${#dates.format(entry.playedOn, 'yyyy-MM-dd HH:mm')}">Date</td>
+    <td th:text="${entry.comment}">—</td>
+  </tr>
+  </tbody>
+</table>
+</div>
+
+<footer>
+  <h3>Maze Racer Game</h3>
+  <p>Developed by Rostyslav.</p>
+  <div class="social-icons">
+    <a href="#" target="_blank">Facebook</a>
+    <a href="#" target="_blank">Twitter</a>
+    <a href="#" target="_blank">Instagram</a>
+  </div>
+</footer>
+
+</body>
+</html>

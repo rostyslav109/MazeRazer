@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Maze Race - Home</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+<h1>Welcome to Maze Race!</h1>
+
+<h2>Select Maze Difficulty:</h2>
+<form action="/maze" method="get">
+  <button name="command" value="easy">Easy</button>
+  <button name="command" value="medium">Medium</button>
+  <button name="command" value="hard">Hard</button>
+</form>
+
+<hr/>
+
+<h2>Average Rating:</h2>
+<p th:text="${averageRating != null} ? ${averageRating} : 'No ratings yet'">0</p>
+
+<h2>Comments:</h2>
+<table>
+  <thead>
+  <tr><th>Player</th><th>Comment</th></tr>
+  </thead>
+  <tbody>
+  <tr th:each="comment : ${comments}">
+    <td th:text="${comment.player}">Player</td>
+    <td th:text="${comment.comment}">Comment</td>
+  </tr>
+  </tbody>
+</table>
+
+</body>
+</html>

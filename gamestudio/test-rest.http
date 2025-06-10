@@ -1,0 +1,71 @@
+### GET: Get top scores for "maze"
+GET http://localhost:8080/api/score/maze
+Accept: application/json
+
+###
+
+#### POST: Add a new score
+#POST http://localhost:8080/api/score
+#Content-Type: application/json
+#
+#{
+#  "player": "testuser",
+#  "game": "maze",
+#  "points": 999,
+#  "playedAt": "2025-04-09T12:00:00"
+#}
+#
+####
+#
+#### GET: Get comments for "maze"
+#GET http://localhost:8080/api/comment/maze
+#Accept: application/json
+#
+####
+#
+#### POST: Add a comment
+#POST http://localhost:8080/api/comment
+#Content-Type: application/json
+#
+#{
+#  "player": "rostislav",
+#  "game": "maze",
+#  "comment": "good game!",
+#  "commentedAt": "2025-04-09T12:00:00"
+#}
+#
+####
+#
+#### GET: Get average rating for "maze"
+#GET http://localhost:8080/api/rating/maze
+#Accept: application/json
+#
+####
+#
+#### POST: Set rating
+#POST http://localhost:8080/api/rating
+#Content-Type: application/json
+#
+#{
+#  "player": "rostislav",
+#  "game": "maze",
+#  "rating": 5,
+#  "ratedAt": "2025-04-09T12:00:00"
+#}
+#
+#### Додати новий рейтинг
+#POST http://localhost:8080/api/rating
+#Content-Type: application/json
+#
+#{
+#  "player": "rostik",
+#  "game": "maze",
+#  "rating": 4,
+#  "ratedAt": "2025-04-09T10:00:00"
+#}
+
+### Отримати середній рейтинг гри
+GET http://localhost:8080/api/rating/maze
+
+### Отримати рейтинг для конкретного гравця
+GET http://localhost:8080/api/rating/maze/rostik
